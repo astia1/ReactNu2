@@ -1,6 +1,7 @@
-import { Component } from "react";
-import { Navbar, NavbarBrand } from "reactstrap";
+import React, { Component } from "react";
 import Directory from "./Directory";
+import Header from "./Header";
+import Footer from "./Footer";
 import { CAMPSITES } from "../shared/campsites";
 import CampsiteInfo from "./CampsiteInfo";
 
@@ -20,11 +21,7 @@ class Main extends Component {
   render() {
     return (
       <div>
-        <Navbar dark color="primary">
-          <div className="container">
-            <NavbarBrand href="/">NuCamp</NavbarBrand>
-          </div>
-        </Navbar>
+        <Header />
         <Directory
           campsites={this.state.campsites}
           onClick={(campsiteId) => this.onCampsiteSelect(campsiteId)}
@@ -36,6 +33,7 @@ class Main extends Component {
             )[0]
           }
         />
+        <Footer />
       </div>
     );
   }
