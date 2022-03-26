@@ -10,10 +10,12 @@ import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { actions } from "react-redux-form";
 import {
+  postFeedback,
   postComment,
   fetchCampsites,
   fetchComments,
   fetchPromotions,
+  fetchPartners,
 } from "../redux/ActionCreators";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
@@ -29,10 +31,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   postComment: (campsiteId, rating, author, text) =>
     postComment(campsiteId, rating, author, text),
-  fetchCampsites: () => fetchCampsites(),
+  postFeedback: (feedback) => postFeedback(feedback),
   resetFeedbackForm: () => actions.reset("feedbackForm"),
+  fetchCampsites: () => fetchCampsites(),
   fetchComments: () => fetchComments(),
   fetchPromotions: () => fetchPromotions(),
+  fetchPartners: () => fetchPartners(),
 };
 
 class Main extends Component {
@@ -40,6 +44,7 @@ class Main extends Component {
     this.props.fetchCampsites();
     this.props.fetchComments();
     this.props.fetchPromotions();
+    this.props.fetchPartners();
   }
 
   render() {
@@ -60,7 +65,13 @@ class Main extends Component {
           }
           promotionLoading={this.props.promotions.isLoading}
           promotionErrMess={this.props.promotions.errMess}
-          partner={this.props.partners.filter((partner) => partner.featured)[0]}
+          partner={
+            this.props.partners.partners.filter(
+              (partner) => partner.featured
+            )[0]
+          }
+          partnerLoading={this.props.partners.isLoading}
+          partnerErrMess={this.props.partners.errMess}
         />
       );
     };
@@ -91,7 +102,7 @@ class Main extends Component {
           <CSSTransition
             key={this.props.location.key}
             classNames="page"
-            timeout={300}
+            timeout={600}
           >
             <Switch>
               <Route path="/home" component={HomePage} />
@@ -110,7 +121,10 @@ class Main extends Component {
                 exact
                 path="/contactus"
                 render={() => (
-                  <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
+                  <Contact
+                    postFeedback={this.props.postFeedback}
+                    resetFeedbackForm={this.props.resetFeedbackForm}
+                  />
                 )}
               />
               <Redirect to="/home" />
